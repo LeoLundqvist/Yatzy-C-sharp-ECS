@@ -25,6 +25,8 @@ namespace Yatzy_C_sharp_ECS
     public class ScoreComponent
     {
         public int ScoreValue { get; set; }
+        public bool[] ScoreNotTaken { get; } = new bool[6];
+
     }
 
     //Entitet
@@ -71,7 +73,6 @@ namespace Yatzy_C_sharp_ECS
                 }
             }
         }
-
         public void SaveDice(Entity entity, int input)
         {
             var diceComponent = entity.GetComponent<DiceComponent>();
@@ -121,10 +122,93 @@ namespace Yatzy_C_sharp_ECS
                 }
             }
         }
-
-        public void ChoosePoint(Entity entity)
+        public void ChoosePoint(Entity playerEntity, Entity inputEntity, GameSystem gameSystem, ScoreSystem scoreSystem)
         {
+            var scoreComponent = playerEntity.GetComponent<ScoreComponent>();
+            var inputComponent = inputEntity.GetComponent<InputComponent>();
+            bool notDecided = true;
 
+            while (notDecided)
+            {
+                Console.WriteLine("Your dice result");
+
+                WriteDice(playerEntity);
+
+                Console.WriteLine("What combination score do you choose?");
+
+                //skriver ut alla valen för combinationer 1-6 om de inte redan blivit valda
+                for(int i = 0; i < 6; i++)
+                {
+                    if (scoreComponent.ScoreNotTaken[i])
+                    {
+                        Console.WriteLine((i+1) + ". All " + (i + 1) + "s");
+                    }
+                }
+
+                gameSystem.Input(inputEntity);
+                
+                // kollar så det input inte är för stort för scoreNotTaken arrayen
+                if(inputComponent.Input >= 1 && inputComponent.Input <= 6)
+                {
+                    // kollar så man inte redan valt denna combinationen
+                    if (scoreComponent.ScoreNotTaken[inputComponent.Input - 1])
+                    {
+                        //om det är mellan 1-6 får man poäng för alla tärningar med den siffran
+                        if (inputComponent.Input >= 1 && inputComponent.Input <= 6 && scoreComponent.ScoreNotTaken[inputComponent.Input - 1])
+                        {
+                            scoreComponent.ScoreValue += scoreSystem.Combination1_6(playerEntity, inputComponent.Input);
+                            Console.WriteLine("You got " + scoreSystem.Combination1_6(playerEntity, inputComponent.Input) + " points");
+                            Console.WriteLine("Your total score is: " + scoreComponent.ScoreValue);
+                            Console.Write("Press enter to continue... ");
+                            Console.ReadLine();
+                            scoreComponent.ScoreNotTaken[inputComponent.Input - 1] = false;
+                            notDecided = false;
+                        }
+                        switch (inputComponent.Input)
+                        {
+                            case 1:
+                                scoreComponent.ScoreNotTaken[inputComponent.Input - 1] = false;
+                                notDecided = false;
+                                break;
+                        }
+
+                    }
+                }
+                Console.Clear();    
+            }
+        }
+    }
+
+    public class ScoreSystem
+    {
+        public int Combination1_6(Entity entity, int number)
+        {
+            int amount = CountAmount(entity, number);
+            int points = amount * number;
+            return points;
+        }
+        public int Combination7(Entity entity, int number)
+        {
+            int amount = CountAmount(entity, number);
+            int points = amount * number;
+            return points;
+        }
+        public int CountAmount(Entity entity, int number)
+        {
+            int amountOfNumbers = 0;
+            var diceComponent = entity.GetComponent<DiceComponent>();
+
+            if (diceComponent != null)
+            {
+                for (int i = 0; i < diceComponent.DiceValue.Length; i++)
+                {
+                    if (diceComponent.DiceValue[i] == number)
+                    {
+                        amountOfNumbers++;
+                    }
+                }
+            }
+            return amountOfNumbers;
         }
     }
 
@@ -137,7 +221,7 @@ namespace Yatzy_C_sharp_ECS
 
         }
 
-        public void Setup(Entity entity)
+        public void SetupSaveDice(Entity entity)
         {
             var saveDiceComponent = entity.GetComponent<SaveDiceComponent>();
             if (saveDiceComponent != null)
@@ -145,6 +229,18 @@ namespace Yatzy_C_sharp_ECS
                 for (int i = 0; i < saveDiceComponent.SaveDice.Length; i++)
                 {
                     saveDiceComponent.SaveDice[i] = false;
+                }
+            }
+        }
+        public void SetupScore(Entity entity)
+        {
+            var scoreComponent = entity.GetComponent<ScoreComponent>();
+            if (scoreComponent != null)
+            {
+                scoreComponent.ScoreValue = 0;
+                for (int i = 0; i < scoreComponent.ScoreNotTaken.Length; i++)
+                {
+                    scoreComponent.ScoreNotTaken[i] = true;
                 }
             }
         }
@@ -179,6 +275,10 @@ namespace Yatzy_C_sharp_ECS
     {
         static void Main(string[] args)
         {
+            var gameSystem = new GameSystem();
+            var diceSystem = new DiceSystem();
+            var scoreSystem = new ScoreSystem();
+
             //fixar input system
             var inputEntity = new Entity(1);
             inputEntity.AddComponent(new InputComponent { });
@@ -190,64 +290,47 @@ namespace Yatzy_C_sharp_ECS
             playerEntity.AddComponent(new SaveDiceComponent { });
             playerEntity.AddComponent(new ScoreComponent { });
 
-            var gameSystem = new GameSystem();
+            gameSystem.SetupScore(playerEntity);
 
-            var diceSystem = new DiceSystem();
-
-            bool playing = true;
 
             //antal ronder
-            for (int i = 0; i < 13; i++)
+            for (int i = 0; i < 6; i++)
             {
                 Console.WriteLine("ROUND START!");
 
-                gameSystem.Setup(playerEntity);
+                gameSystem.SetupSaveDice(playerEntity);
 
                 //antal kast försök
                 for (int j = 0; j < 2; j++)
                 {
                     diceSystem.ThrowDice(playerEntity);
-                    playing = true;
+                    bool playing = true;
 
                     //spelet
                     while (playing)
                     {
                         diceSystem.WriteDice(playerEntity);
 
-                        Console.WriteLine("Do you want to save any dice, write the number you want to save and if no write 7");
+                        Console.WriteLine("Type the number of the dice you want to save, or type anything else to continue");
 
-                        //if (Int32.TryParse(inputString, out int input)) { }
                         gameSystem.Input(inputEntity);
                         Console.Clear();
 
-                        switch (inputComponent.Input)
+                        if (inputComponent.Input >= 1 && inputComponent.Input <= 6)
                         {
-                            case 1:
-                                diceSystem.SaveDice(playerEntity, inputComponent.Input);
-                                break;
-                            case 2:
-                                diceSystem.SaveDice(playerEntity, inputComponent.Input);
-                                break;
-                            case 3:
-                                diceSystem.SaveDice(playerEntity, inputComponent.Input);
-                                break;
-                            case 4:
-                                diceSystem.SaveDice(playerEntity, inputComponent.Input);
-                                break;
-                            case 5:
-                                diceSystem.SaveDice(playerEntity, inputComponent.Input);
-                                break;
-                            case 6:
-                                diceSystem.SaveDice(playerEntity, inputComponent.Input);
-                                break;
-                            case 7:
-                                playing = false;
-                                break;
+                            diceSystem.SaveDice(playerEntity, inputComponent.Input);
+                        }
+                        else
+                        {
+                            playing = false;
                         }
                     }
                 }
                 //choose points
-
+                
+                gameSystem.SetupSaveDice(playerEntity);
+                diceSystem.ChoosePoint(playerEntity, inputEntity, gameSystem, scoreSystem);
+                
             }
         }
     }
