@@ -6,7 +6,7 @@ namespace Yatzy_C_sharp_ECS
     //Input
     public class InputComponent
     {
-        public int Input { get; }
+        public int Input { get; set; }
     }
 
     //Tärningarna man väljer att spara
@@ -21,11 +21,10 @@ namespace Yatzy_C_sharp_ECS
         public int[] DiceValue { get; } = new int[6];
 
     }
-
     //Dina poäng
     public class ScoreComponent
     {
-        public int ScoreValue { get; }
+        public int ScoreValue { get; set; }
     }
 
     //Entitet
@@ -58,20 +57,17 @@ namespace Yatzy_C_sharp_ECS
             var diceComponent = entity.GetComponent<DiceComponent>();
             var savedDiceComponent = entity.GetComponent<SaveDiceComponent>();
 
-
             if (diceComponent != null && savedDiceComponent != null)
             {
                 Random rnd = new Random();
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < diceComponent.DiceValue.Length; i++)
                 {
                     //Kollar om man har sparat en tärning
-                    if(savedDiceComponent.SaveDice[i])
+                    if(!savedDiceComponent.SaveDice[i])
                     {
                         diceComponent.DiceValue[i] = rnd.Next(6) + 1;
-                        savedDiceComponent.SaveDice[i] = false;
                     }
-                    Console.WriteLine("Dice " + (i+1) + ": " + diceComponent.DiceValue[i]);
-
+                    savedDiceComponent.SaveDice[i] = false;
                 }
             }
         }
@@ -107,14 +103,37 @@ namespace Yatzy_C_sharp_ECS
 
             }
         }
+        public void WriteDice(Entity entity)
+        {
+            var diceComponent = entity.GetComponent<DiceComponent>();
+            var savedDiceComponent = entity.GetComponent<SaveDiceComponent>();
+
+            if (diceComponent != null && savedDiceComponent != null)
+            {
+                for (int i = 0; i < diceComponent.DiceValue.Length; i++)
+                {
+                    if (savedDiceComponent.SaveDice[i])
+                    {
+                        Console.WriteLine("Dice " + (i + 1) + ": " + diceComponent.DiceValue[i] + " (Saved)");
+                    }
+                    else
+                    Console.WriteLine("Dice " + (i + 1) + ": " + diceComponent.DiceValue[i]);
+                }
+            }
+        }
+
+        public void ChoosePoint(Entity entity)
+        {
+
+        }
     }
 
     public class GameSystem
     {
         public void Play()
         {
-            
-            
+
+
 
         }
 
@@ -123,7 +142,7 @@ namespace Yatzy_C_sharp_ECS
             var saveDiceComponent = entity.GetComponent<SaveDiceComponent>();
             if (saveDiceComponent != null)
             {
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < saveDiceComponent.SaveDice.Length; i++)
                 {
                     saveDiceComponent.SaveDice[i] = false;
                 }
@@ -142,64 +161,94 @@ namespace Yatzy_C_sharp_ECS
                 {
                     inputComponent.Input = input;
                 }
+                else
+                {
+                    inputComponent.Input = 0;
+                }
 
 
             }
 
 
         }
+
+        
+    }
 
     class Program
     {
         static void Main(string[] args)
         {
+            //fixar input system
             var inputEntity = new Entity(1);
             inputEntity.AddComponent(new InputComponent { });
+            var inputComponent = inputEntity.GetComponent<InputComponent>();
 
+            //fixar player entity
             var playerEntity = new Entity(2);
             playerEntity.AddComponent(new DiceComponent { });
             playerEntity.AddComponent(new SaveDiceComponent { });
             playerEntity.AddComponent(new ScoreComponent { });
 
-            var diceSystem = new DiceSystem();
-            diceSystem.ThrowDice(playerEntity);
-
             var gameSystem = new GameSystem();
-            gameSystem.Setup(playerEntity);
+
+            var diceSystem = new DiceSystem();
 
             bool playing = true;
-            while (playing)
+
+            //antal ronder
+            for (int i = 0; i < 13; i++)
             {
-                Console.WriteLine("Do you want to save any dice, write the number you want to save and if no write 0");
+                Console.WriteLine("ROUND START!");
 
-                gameSystem.Input(inputEntity);
+                gameSystem.Setup(playerEntity);
 
-                switch (input)
+                //antal kast försök
+                for (int j = 0; j < 2; j++)
                 {
-                    case 1:
+                    diceSystem.ThrowDice(playerEntity);
+                    playing = true;
 
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        break;
-                    case 5:
-                        break;
-                    case 6:
-                        break;
-                    case 0:
-                        playing = false;
-                        break;
+                    //spelet
+                    while (playing)
+                    {
+                        diceSystem.WriteDice(playerEntity);
+
+                        Console.WriteLine("Do you want to save any dice, write the number you want to save and if no write 7");
+
+                        //if (Int32.TryParse(inputString, out int input)) { }
+                        gameSystem.Input(inputEntity);
+                        Console.Clear();
+
+                        switch (inputComponent.Input)
+                        {
+                            case 1:
+                                diceSystem.SaveDice(playerEntity, inputComponent.Input);
+                                break;
+                            case 2:
+                                diceSystem.SaveDice(playerEntity, inputComponent.Input);
+                                break;
+                            case 3:
+                                diceSystem.SaveDice(playerEntity, inputComponent.Input);
+                                break;
+                            case 4:
+                                diceSystem.SaveDice(playerEntity, inputComponent.Input);
+                                break;
+                            case 5:
+                                diceSystem.SaveDice(playerEntity, inputComponent.Input);
+                                break;
+                            case 6:
+                                diceSystem.SaveDice(playerEntity, inputComponent.Input);
+                                break;
+                            case 7:
+                                playing = false;
+                                break;
+                        }
+                    }
                 }
+                //choose points
+
             }
-
-
         }
     }
-
-        
-
-
 }
