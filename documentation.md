@@ -5,19 +5,19 @@ The project aims to develop a Yatzy game using the Entity-Component-System (ECS)
 ## Scope
 The scope of the project encompasses the development of a fully playable Yatzy game with the following features:
 
-* Dice Rolling: Players can roll five dice at the beginning of their turn.
-* Scoring Mechanism: Implementing the scoring rules of Yatzy to calculate and display scores.
-* Turn-based Gameplay: Players take turns rolling dice and selecting scoring categories until all categories are filled.
-* User Interface: Designing a user-friendly interface to display the game state, dice rolls, and scorecard.
-* Game Logic: Implementing the core game logic to enforce rules and determine game outcomes.
+   - Dice Rolling: Players can roll five dice at the beginning of their turn.
+   - Scoring Mechanism: Implementing the scoring rules of Yatzy to calculate and display scores.
+   - Turn-based Gameplay: Players take turns rolling dice and selecting scoring categories until all categories are filled.
+   - User Interface: Designing a user-friendly interface to display the game state, dice rolls, and scorecard.
+   - Game Logic: Implementing the core game logic to enforce rules and determine game outcomes.
 ## Objectives
 The primary objectives of the project are as follows:
 
-* ECS Implementation: Utilize the ECS architecture to design the game components, entities, and systems.
-* Modularity and Extensibility: Design the architecture to allow easy addition of new features and modifications without significant code changes.
-* Scalability: Ensure that the game architecture can handle potential expansions or enhancements in the future.
-* Code Quality: Maintain clean, readable, and well-documented code following best practices and design patterns.
-* User Experience: Prioritize user experience by creating an intuitive interface and providing clear instructions for playing the game.
+- ECS Implementation: Utilize the ECS architecture to design the game components, entities, and systems.
+- Modularity and Extensibility: Design the architecture to allow easy addition of new features and modifications without significant code changes.
+- Scalability: Ensure that the game architecture can handle potential expansions or enhancements in the future.
+- Code Quality: Maintain clean, readable, and well-documented code following best practices and design patterns.
+- User Experience: Prioritize user experience by creating an intuitive interface and providing clear instructions for playing the game.
 By achieving these objectives, the project aims to deliver a robust and enjoyable Yatzy gaming experience for players while demonstrating the benefits of the ECS architecture in game development.
 
 This overview sets the stage for understanding the project's goals, the approach to be taken, and the expected outcomes of implementing Yatzy using the ECS architecture.
