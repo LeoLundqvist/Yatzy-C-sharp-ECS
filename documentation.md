@@ -1,5 +1,5 @@
 # Project Description
-## 1. Overview
+#### 1. Overview
 This documentation provides an in-depth guide to developing a Yatzy game using the ECS (Entity-Component-System) architecture in C#. It serves as a comprehensive resource for understanding and contributing to the project.
 
 #### 2. Technical Specifications and Design
