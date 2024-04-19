@@ -22,3 +22,14 @@ This documentation provides an in-depth guide to developing a Yatzy game using t
 - **Game Version:** 1.0.0
 - **C# Version:** 9.0 or higher
 
+### 7. Performance Metrics and Optimization
+No specific performance metrics or optimization techniques are mentioned for this text-based game.
+
+### 8. Accessibility in Game Design
+No specific accessibility features are mentioned for this text-based game.
+
+### 9. Troubleshooting and FAQs
+- **Q:** What if the game doesn't start?
+  - **A:** Check dependencies and syntax errors.
+- **Q:** How do I resolve issues during gameplay?
+  - **A:** Check for any console output messages for errors or unexpected behavior.
