@@ -7,6 +7,8 @@ This documentation provides an in-depth guide to developing a Yatzy game using t
 - **Components:** Includes structures like InputComponent, SaveDiceComponent, DiceComponent, and ScoreComponent, holding respective states.
 - **Systems:** Encompass functionalities such as DiceSystem for rolling dice and calculating scores, and GameSystem for managing game flow and user input.
 
+### 3. Architectural Overview
+
 
 ### 4. Development Guidelines and Standards
 - **ECS Adherence:** Adhere to the ECS architecture for integrating new features or making modifications.
@@ -33,3 +35,13 @@ No specific accessibility features are mentioned for this text-based game.
   - **A:** Check dependencies and syntax errors.
 - **Q:** How do I resolve issues during gameplay?
   - **A:** Check for any console output messages for errors or unexpected behavior.
+
+### 10. Best Practice Recommendations
+- Continuous Testing: Regular testing alongside code evolution is recommended.
+- Code Review: Regular code reviews can help identify potential issues and improve code quality.
+
+### 11. References and Further Reading
+- No specific references or further reading materials are mentioned for this project.
+
+### 12. Feedback and Updates
+Your feedback is crucial for the continual improvement of this project. Please submit suggestions or issues via GitHub. Watch this section for future updates and enhancements.
