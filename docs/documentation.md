@@ -8,6 +8,9 @@ This documentation provides an in-depth guide to developing a Yatzy game using t
 - **Systems:** Encompass functionalities such as DiceSystem for rolling dice and calculating scores, and GameSystem for managing game flow and user input.
 
 ### 3. Architectural Overview
+![Flowchart](.../assets/ProgramDocumentation.JPG)
+
+![Flowchart](.../assets/UserDocumentation.JPG)
 
 
 ### 4. Development Guidelines and Standards
