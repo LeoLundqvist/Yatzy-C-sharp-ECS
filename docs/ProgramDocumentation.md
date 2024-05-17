@@ -8,7 +8,10 @@ This documentation provides an in-depth guide to developing a Yatzy game using t
 - **Systems:** Encompass functionalities such as DiceSystem for rolling dice and calculating scores, and GameSystem for managing game flow and user input.
 
 ### 3. Architectural Overview
-![Flowchart](https://github.com/LeoLundqvist/Yatzy-C-sharp-ECS/blob/master/assets/ProgramDocumentation.PNG)
+- ECS Architecture Flowchart
+![Flowchart](https://github.com/LeoLundqvist/Yatzy-C-sharp-ECS/blob/master/assets/System_architecture.PNG)
+- Game Loop Sequence Diagram
+![Flowchart](https://github.com/LeoLundqvist/Yatzy-C-sharp-ECS/blob/master/assets/flowchart.PNG)
 
 ### 4. Development Guidelines and Standards
 - **ECS Adherence:** Adhere to the ECS architecture for integrating new features or making modifications.
