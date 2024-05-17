@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 
+//all components
 namespace Components
 { 
+    
+    //Input
     public class InputComponent
     {
         public int Input { get; set; }
